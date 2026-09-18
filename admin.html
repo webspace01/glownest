@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GlowNest Admin Panel</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #fff8fa;
+  color: #34272c;
+}
+
+header {
+  background: #34272c;
+  color: white;
+  padding: 22px 30px;
+}
+
+header h1 {
+  font-family: Georgia, serif;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 35px auto;
+  padding: 0 20px;
+}
+
+.panel {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #eedde3;
+  box-shadow: 0 10px 30px rgba(84,50,62,.08);
+}
+
+h2 {
+  font-family: Georgia, serif;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #eedde3;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  background: #c95f83;
+  color: white;
+  padding: 13px 22px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #a94769;
+}
+
+.products {
+  margin-top: 35px;
+}
+
+.product {
+  border: 1px solid #eedde3;
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.product-info h3 {
+  font-family: Georgia, serif;
+  margin-bottom: 5px;
+}
+
+.product-info p {
+  color: #776a70;
+  font-size: 14px;
+}
+
+.delete {
+  background: #34272c;
+}
+
+.delete:hover {
+  background: #a94769;
+}
+
+.empty {
+  color: #776a70;
+  padding: 20px 0;
+}
+
+.back {
+  display: inline-block;
+  margin-top: 25px;
+  color: #a94769;
+  text-decoration: none;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>GlowNest Admin Panel</h1>
+</header>
+
+<div class="container">
+
+  <div class="panel">
+
+    <h2>Add New Product</h2>
+
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" id="name" placeholder="Example: Pearl Nail Set">
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select id="category">
+        <option>Beauty & Nails</option>
+        <option>Jewelry</option>
+        <option>Accessories</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Product Image URL</label>
+      <input type="text" id="image" placeholder="Paste product image URL">
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="text" id="price" placeholder="Example: $9.99">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="description" placeholder="Write a short product description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>AliExpress Affiliate Link</label>
+      <input type="text" id="link" placeholder="Paste your AliExpress affiliate link">
+    </div>
+
+    <button onclick="addProduct()">Add Product</button>
+
+    <div class="products">
+
+      <h2>Your Products</h2>
+
+      <div id="productList"></div>
+
+    </div>
+
+    <a href="index.html" class="back">← Back to GlowNest Website</a>
+
+  </div>
+
+</div>
+
+<script>
+
+function getProducts() {
+  return JSON.parse(localStorage.getItem("glownestProducts")) || [];
+}
+
+function saveProducts(products) {
+  localStorage.setItem("glownestProducts", JSON.stringify(products));
+}
+
+function addProduct() {
+
+  const name = document.getElementById("name").value.trim();
+  const category = document.getElementById("category").value;
+  const image = document.getElementById("image").value.trim();
+  const price = document.getElementById("price").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const link = document.getElementById("link").value.trim();
+
+  if (!name || !image || !price || !description || !link) {
+    alert("Please fill in all product details.");
+    return;
+  }
+
+  const products = getProducts();
+
+  products.push({
+    id: Date.now(),
+    name,
+    category,
+    image,
+    price,
+    description,
+    link
+  });
+
+  saveProducts(products);
+
+  document.getElementById("name").value = "";
+  document.getElementById("image").value = "";
+  document.getElementById("price").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("link").value = "";
+
+  showProducts();
+
+  alert("Product added successfully!");
+}
+
+function deleteProduct(id) {
+
+  if (!confirm("Delete this product?")) {
+    return;
+  }
+
+  let products = getProducts();
+
+  products = products.filter(product => product.id !== id);
+
+  saveProducts(products);
+
+  showProducts();
+}
+
+function showProducts() {
+
+  const list = document.getElementById("productList");
+  const products = getProducts();
+
+  if (products.length === 0) {
+    list.innerHTML = '<div class="empty">No products added yet.</div>';
+    return;
+  }
+
+  list.innerHTML = products.map(product => `
+
+    <div class="product">
+
+      <div class="product-info">
+
+        <h3>${product.name}</h3>
+
+        <p>
+          ${product.category} · ${product.price}
+        </p>
+
+      </div>
+
+      <button class="delete" onclick="deleteProduct(${product.id})">
+        Delete
+      </button>
+
+    </div>
+
+  `).join("");
+}
+
+showProducts();
+
+</script>
+
+</body>
+</html>
