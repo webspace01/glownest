@@ -1,260 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GlowNest Admin Panel</title>
+  <title>GlowNest Admin</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  font-family: Arial, sans-serif;
-  background: #fff8fa;
-  color: #34272c;
-}
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #fff7fa;
+      color: #4d3f45;
+    }
 
-header {
-  background: #34272c;
-  color: white;
-  padding: 22px 30px;
-}
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
 
-header h1 {
-  font-family: Georgia, serif;
-}
+    h1 {
+      text-align: center;
+      color: #c95f83;
+      margin-bottom: 10px;
+    }
 
-.container {
-  max-width: 1100px;
-  margin: 35px auto;
-  padding: 0 20px;
-}
+    .subtitle {
+      text-align: center;
+      color: #776a70;
+      margin-bottom: 30px;
+    }
 
-.panel {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  border: 1px solid #eedde3;
-  box-shadow: 0 10px 30px rgba(84,50,62,.08);
-}
+    .form-box {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(120, 80, 100, 0.10);
+      margin-bottom: 35px;
+    }
 
-h2 {
-  font-family: Georgia, serif;
-  margin-bottom: 25px;
-}
+    .form-box h2 {
+      margin-top: 0;
+      color: #c95f83;
+    }
 
-.form-group {
-  margin-bottom: 18px;
-}
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 7px;
+    }
 
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 7px;
-}
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e3cbd5;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+    }
 
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #eedde3;
-  border-radius: 10px;
-  font-size: 15px;
-}
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #c95f83;
+    }
 
-textarea {
-  min-height: 100px;
-  resize: vertical;
-}
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
 
-input[type="file"] {
-  padding: 10px;
-  background: #fff8fa;
-}
+    .required {
+      color: #d44d72;
+    }
 
-#imagePreview {
-  display: none;
-  width: 180px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-top: 12px;
-  border: 1px solid #eedde3;
-}
+    .image-preview {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 12px;
+      display: none;
+      border: 1px solid #ead5dd;
+    }
 
-button {
-  border: none;
-  background: #c95f83;
-  color: white;
-  padding: 13px 22px;
-  border-radius: 10px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
 
-button:hover {
-  background: #a94769;
-}
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.products {
-  margin-top: 35px;
-}
+    .add-btn {
+      background: #c95f83;
+      color: white;
+      flex: 1;
+    }
 
-.product {
-  border: 1px solid #eedde3;
-  border-radius: 15px;
-  padding: 18px;
-  margin-bottom: 15px;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: center;
-}
+    .cancel-btn {
+      background: #eee1e6;
+      color: #5c4d54;
+      display: none;
+    }
 
-.product-info h3 {
-  font-family: Georgia, serif;
-  margin-bottom: 5px;
-}
+    .product-list-title {
+      color: #c95f83;
+      margin-bottom: 15px;
+    }
 
-.product-info p {
-  color: #776a70;
-  font-size: 14px;
-}
+    .product-item {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 6px 22px rgba(120, 80, 100, 0.08);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
 
-.product-thumbnail {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-right: 15px;
-}
+    .product-thumb {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+      background: #f7edf1;
+    }
 
-.product-left {
-  display: flex;
-  align-items: center;
-}
+    .product-details {
+      flex: 1;
+      min-width: 0;
+    }
 
-.delete {
-  background: #34272c;
-}
+    .product-details h3 {
+      margin: 0 0 6px;
+      color: #4d3f45;
+    }
 
-.delete:hover {
-  background: #a94769;
-}
+    .product-details p {
+      margin: 4px 0;
+      color: #776a70;
+      font-size: 14px;
+    }
 
-.empty {
-  color: #776a70;
-  padding: 20px 0;
-}
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
 
-.back {
-  display: inline-block;
-  margin-top: 25px;
-  color: #a94769;
-  text-decoration: none;
-  font-weight: bold;
-}
-</style>
+    .edit-btn {
+      background: #e7a3b9;
+      color: white;
+    }
+
+    .delete-btn {
+      background: #d9536f;
+      color: white;
+    }
+
+    .empty {
+      text-align: center;
+      color: #776a70;
+      padding: 25px;
+      background: white;
+      border-radius: 15px;
+    }
+
+    @media (max-width: 600px) {
+      .product-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .product-thumb {
+        width: 100%;
+        height: 200px;
+      }
+
+      .product-actions {
+        width: 100%;
+      }
+
+      .edit-btn,
+      .delete-btn {
+        flex: 1;
+      }
+
+      .button-row {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <h1>GlowNest Admin Panel</h1>
-</header>
+  <div class="container">
 
-<div class="container">
+    <h1>GlowNest Admin</h1>
 
-  <div class="panel">
+    <p class="subtitle">
+      Add and manage your GlowNest products
+    </p>
 
-    <h2>Add New Product</h2>
 
-    <div class="form-group">
-      <label>Product Name</label>
-      <input type="text" id="name" placeholder="Example: Pearl Nail Set">
-    </div>
+    <div class="form-box">
 
-    <div class="form-group">
-      <label>Category</label>
+      <h2 id="formTitle">Add New Product</h2>
+
+
+      <label for="productName">
+        Product Name <span class="required">*</span>
+      </label>
+
+      <input
+        type="text"
+        id="productName"
+        placeholder="Example: Elegant Press On Nails"
+      >
+
+
+      <label for="category">
+        Category <span class="required">*</span>
+      </label>
+
       <select id="category">
-        <option>Beauty & Nails</option>
-        <option>Jewelry</option>
-        <option>Accessories</option>
+
+        <option value="">
+          Select Category
+        </option>
+
+        <option value="Beauty & Nails">
+          Beauty & Nails
+        </option>
+
+        <option value="Jewelry & Accessories">
+          Jewelry & Accessories
+        </option>
+
       </select>
+
+
+      <label for="imageFile">
+        Product Image <span class="required">*</span>
+      </label>
+
+      <input
+        type="file"
+        id="imageFile"
+        accept="image/*"
+        onchange="previewImage(event)"
+      >
+
+      <img
+        id="imagePreview"
+        class="image-preview"
+        alt="Product Image Preview"
+      >
+
+
+      <label for="price">
+        Price
+      </label>
+
+      <input
+        type="text"
+        id="price"
+        placeholder="Example: $4.99"
+      >
+
+
+      <label for="description">
+        Description <span class="required">*</span>
+      </label>
+
+      <textarea
+        id="description"
+        placeholder="Write a short product description..."
+      ></textarea>
+
+
+      <label for="link">
+        Main AliExpress Affiliate Link <span class="required">*</span>
+      </label>
+
+      <input
+        type="url"
+        id="link"
+        placeholder="https://s.click.aliexpress.com/..."
+      >
+
+
+      <label for="pkrLink">
+        🇵🇰 PKR Affiliate Link
+      </label>
+
+      <input
+        type="url"
+        id="pkrLink"
+        placeholder="https://s.click.aliexpress.com/..."
+      >
+
+
+      <label for="usdLink">
+        🌎 USD Affiliate Link
+      </label>
+
+      <input
+        type="url"
+        id="usdLink"
+        placeholder="https://s.click.aliexpress.com/..."
+      >
+
+
+      <div class="button-row">
+
+        <button
+          class="add-btn"
+          id="saveButton"
+          onclick="saveProduct()"
+        >
+          Add Product
+        </button>
+
+        <button
+          class="cancel-btn"
+          id="cancelButton"
+          onclick="cancelEdit()"
+        >
+          Cancel Edit
+        </button>
+
+      </div>
+
     </div>
 
-    <div class="form-group">
-      <label>Product Image</label>
-      <input type="file" id="imageFile" accept="image/*" onchange="previewImage(event)">
-      <img id="imagePreview" alt="Image Preview">
-    </div>
 
-    <div class="form-group">
-      <label>Price (Optional)</label>
-      <input type="text" id="price" placeholder="Example: $9.99">
-    </div>
+    <h2 class="product-list-title">
+      Your Products
+    </h2>
 
-    <div class="form-group">
-      <label>Description</label>
-      <textarea id="description" placeholder="Write a short product description"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>AliExpress Affiliate Link</label>
-      <input type="text" id="link" placeholder="Paste your AliExpress affiliate link">
-    </div>
-
-    <div class="form-group">
-      <label>PKR Affiliate Link</label>
-      <input type="text" id="pkrLink" placeholder="Paste PKR affiliate link">
-    </div>
-
-    <div class="form-group">
-      <label>USD Affiliate Link</label>
-      <input type="text" id="usdLink" placeholder="Paste USD affiliate link">
-    </div>
-
-    <button onclick="addProduct()">Add Product</button>
-
-    <div class="products">
-
-      <h2>Your Products</h2>
-
-      <div id="productList"></div>
-
-    </div>
-
-    <a href="index.html" class="back">← Back to GlowNest Website</a>
+    <div id="productList"></div>
 
   </div>
 
-</div>
 
 <script>
 
+let products = JSON.parse(
+  localStorage.getItem("glownestProducts")
+) || [];
+
 let selectedImage = "";
 
-function getProducts() {
-  return JSON.parse(localStorage.getItem("glownestProducts")) || [];
-}
+let editingId = null;
 
-function saveProducts(products) {
-  localStorage.setItem("glownestProducts", JSON.stringify(products));
-}
+
+/* =========================
+   IMAGE PREVIEW
+========================= */
 
 function previewImage(event) {
 
   const file = event.target.files[0];
 
-  if (!file) {
-    return;
-  }
+  if (!file) return;
 
   const reader = new FileReader();
 
@@ -262,123 +390,452 @@ function previewImage(event) {
 
     selectedImage = e.target.result;
 
-    const preview = document.getElementById("imagePreview");
+    const preview =
+      document.getElementById("imagePreview");
 
     preview.src = selectedImage;
+
     preview.style.display = "block";
+
   };
 
   reader.readAsDataURL(file);
 }
 
-function addProduct() {
 
-  const name = document.getElementById("name").value.trim();
-  const category = document.getElementById("category").value;
-  const price = document.getElementById("price").value.trim();
-  const description = document.getElementById("description").value.trim();
-  const link = document.getElementById("link").value.trim();
-  const pkrLink = document.getElementById("pkrLink").value.trim();
-  const usdLink = document.getElementById("usdLink").value.trim();
+/* =========================
+   SAVE PRODUCT
+========================= */
 
-  if (!name || !selectedImage || !description || !link) {
-    alert("Please fill in all required product details and select an image.");
+function saveProduct() {
+
+  const name =
+    document.getElementById("productName").value.trim();
+
+  const category =
+    document.getElementById("category").value;
+
+  const price =
+    document.getElementById("price").value.trim();
+
+  const description =
+    document.getElementById("description").value.trim();
+
+  const link =
+    document.getElementById("link").value.trim();
+
+  const pkrLink =
+    document.getElementById("pkrLink").value.trim();
+
+  const usdLink =
+    document.getElementById("usdLink").value.trim();
+
+
+  /* Required fields */
+
+  if (!name || !category || !description || !link) {
+
+    alert(
+      "Please fill in Product Name, Category, Description and Main Affiliate Link."
+    );
+
     return;
   }
 
-  const products = getProducts();
 
-  products.push({
-    id: Date.now(),
-    name,
-    category,
-    image: selectedImage,
-    price,
-    description,
-    link,
-    pkrLink,
-    usdLink
-  });
+  /* =========================
+     EDIT EXISTING PRODUCT
+  ========================= */
 
-  saveProducts(products);
+  if (editingId !== null) {
 
-  document.getElementById("name").value = "";
-  document.getElementById("imageFile").value = "";
-  document.getElementById("price").value = "";
-  document.getElementById("description").value = "";
-  document.getElementById("link").value = "";
-  document.getElementById("pkrLink").value = "";
-  document.getElementById("usdLink").value = "";
+    const index = products.findIndex(
+      product => product.id === editingId
+    );
+
+
+    if (index !== -1) {
+
+      products[index] = {
+
+        ...products[index],
+
+        name: name,
+
+        category: category,
+
+        price: price,
+
+        description: description,
+
+        link: link,
+
+        pkrLink: pkrLink,
+
+        usdLink: usdLink,
+
+        image:
+          selectedImage ||
+          products[index].image
+
+      };
+
+    }
+
+    alert("Product updated successfully!");
+
+  }
+
+
+  /* =========================
+     ADD NEW PRODUCT
+  ========================= */
+
+  else {
+
+    if (!selectedImage) {
+
+      alert("Please select a product image.");
+
+      return;
+    }
+
+
+    const newProduct = {
+
+      id: Date.now(),
+
+      name: name,
+
+      category: category,
+
+      image: selectedImage,
+
+      price: price,
+
+      description: description,
+
+      link: link,
+
+      pkrLink: pkrLink,
+
+      usdLink: usdLink
+
+    };
+
+
+    products.push(newProduct);
+
+    alert("Product added successfully!");
+
+  }
+
+
+  /* Save */
+
+  localStorage.setItem(
+    "glownestProducts",
+    JSON.stringify(products)
+  );
+
+
+  resetForm();
+
+  renderProducts();
+
+}
+
+
+/* =========================
+   EDIT PRODUCT
+========================= */
+
+function editProduct(id) {
+
+  const product = products.find(
+    item => item.id === id
+  );
+
+  if (!product) return;
+
+
+  editingId = id;
+
+
+  document.getElementById("productName").value =
+    product.name || "";
+
+
+  document.getElementById("category").value =
+    product.category || "";
+
+
+  document.getElementById("price").value =
+    product.price || "";
+
+
+  document.getElementById("description").value =
+    product.description || "";
+
+
+  document.getElementById("link").value =
+    product.link || "";
+
+
+  document.getElementById("pkrLink").value =
+    product.pkrLink || "";
+
+
+  document.getElementById("usdLink").value =
+    product.usdLink || "";
+
 
   selectedImage = "";
 
-  document.getElementById("imagePreview").src = "";
-  document.getElementById("imagePreview").style.display = "none";
 
-  showProducts();
+  const preview =
+    document.getElementById("imagePreview");
 
-  alert("Product added successfully!");
+
+  if (product.image) {
+
+    preview.src = product.image;
+
+    preview.style.display = "block";
+
+  }
+
+
+  document.getElementById("formTitle").textContent =
+    "Edit Product";
+
+
+  document.getElementById("saveButton").textContent =
+    "Update Product";
+
+
+  document.getElementById("cancelButton").style.display =
+    "block";
+
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
 }
+
+
+/* =========================
+   DELETE PRODUCT
+========================= */
 
 function deleteProduct(id) {
 
-  if (!confirm("Delete this product?")) {
-    return;
+  const product = products.find(
+    item => item.id === id
+  );
+
+  if (!product) return;
+
+
+  const confirmDelete = confirm(
+    "Are you sure you want to delete this product?"
+  );
+
+
+  if (!confirmDelete) return;
+
+
+  products = products.filter(
+    item => item.id !== id
+  );
+
+
+  localStorage.setItem(
+    "glownestProducts",
+    JSON.stringify(products)
+  );
+
+
+  if (editingId === id) {
+
+    resetForm();
+
   }
 
-  let products = getProducts();
 
-  products = products.filter(product => product.id !== id);
+  renderProducts();
 
-  saveProducts(products);
-
-  showProducts();
 }
 
-function showProducts() {
 
-  const list = document.getElementById("productList");
-  const products = getProducts();
+/* =========================
+   CANCEL EDIT
+========================= */
+
+function cancelEdit() {
+
+  resetForm();
+
+}
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+function resetForm() {
+
+  editingId = null;
+
+  selectedImage = "";
+
+
+  document.getElementById("productName").value = "";
+
+  document.getElementById("category").value = "";
+
+  document.getElementById("price").value = "";
+
+  document.getElementById("description").value = "";
+
+  document.getElementById("link").value = "";
+
+  document.getElementById("pkrLink").value = "";
+
+  document.getElementById("usdLink").value = "";
+
+  document.getElementById("imageFile").value = "";
+
+
+  const preview =
+    document.getElementById("imagePreview");
+
+  preview.src = "";
+
+  preview.style.display = "none";
+
+
+  document.getElementById("formTitle").textContent =
+    "Add New Product";
+
+
+  document.getElementById("saveButton").textContent =
+    "Add Product";
+
+
+  document.getElementById("cancelButton").style.display =
+    "none";
+
+}
+
+
+/* =========================
+   DISPLAY PRODUCTS
+========================= */
+
+function renderProducts() {
+
+  const list =
+    document.getElementById("productList");
+
 
   if (products.length === 0) {
-    list.innerHTML = '<div class="empty">No products added yet.</div>';
+
+    list.innerHTML = `
+      <div class="empty">
+        No products added yet.
+      </div>
+    `;
+
     return;
   }
+
 
   list.innerHTML = products.map(product => `
 
-    <div class="product">
+    <div class="product-item">
 
-      <div class="product-left">
+      <img
+        class="product-thumb"
+        src="${product.image || ""}"
+        alt="${product.name || "Product"}"
+      >
 
-        <img
-          src="${product.image}"
-          class="product-thumbnail"
-          alt="${product.name}"
-        >
 
-        <div class="product-info">
+      <div class="product-details">
 
-          <h3>${product.name}</h3>
+        <h3>
+          ${escapeHtml(product.name || "Unnamed Product")}
+        </h3>
 
-          <p>
-            ${product.category} · ${product.price || "Price not set"}
-          </p>
+        <p>
+          <strong>Category:</strong>
+          ${escapeHtml(product.category || "")}
+        </p>
+
+        ${
+          product.price
+          ? `
+            <p>
+              <strong>Price:</strong>
+              ${escapeHtml(product.price)}
+            </p>
+          `
+          : ""
+        }
+
+
+        <div class="product-actions">
+
+          <button
+            class="edit-btn"
+            onclick="editProduct(${product.id})"
+          >
+            ✏️ Edit
+          </button>
+
+
+          <button
+            class="delete-btn"
+            onclick="deleteProduct(${product.id})"
+          >
+            🗑️ Delete
+          </button>
 
         </div>
 
       </div>
 
-      <button class="delete" onclick="deleteProduct(${product.id})">
-        Delete
-      </button>
-
     </div>
 
   `).join("");
+
 }
 
-showProducts();
+
+/* =========================
+   HTML SAFETY
+========================= */
+
+function escapeHtml(text) {
+
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
+renderProducts();
 
 </script>
 
