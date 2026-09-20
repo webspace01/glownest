@@ -851,23 +851,6 @@
 
 </section>
 <script>
-function getVisitorCurrency() {
-  const timezone =
-    Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-
-  const language =
-    (navigator.language || "").toLowerCase();
-
-  // Pakistan visitors normally use the Asia/Karachi timezone
-  // or a Pakistan browser locale.
-  const isPakistan =
-    timezone === "Asia/Karachi" ||
-    language === "ur-pk" ||
-    language === "en-pk";
-
-  return isPakistan ? "PKR" : "USD";
-}
-
 function loadGlowNestProducts() {
   const products =
     JSON.parse(localStorage.getItem("glownestProducts")) || [];
@@ -885,18 +868,8 @@ function loadGlowNestProducts() {
     return;
   }
 
-  const visitorCurrency = getVisitorCurrency();
-
   list.innerHTML = products.map(product => {
-    const autoLink =
-      visitorCurrency === "PKR"
-        ? (product.pkrLink || product.link)
-        : (product.usdLink || product.link);
-
-    const autoLabel =
-      visitorCurrency === "PKR"
-        ? "🇵🇰 Shop in PKR"
-        : "🌎 Shop in USD";
+    const usdLink = product.usdLink || product.link;
 
     return `
       <article class="product-card">
@@ -922,48 +895,13 @@ function loadGlowNestProducts() {
             font-size:18px;
           ">${product.price}</strong>
 
-          <div class="product-buttons">
-
-            <a
-              href="${autoLink}"
-              target="_blank"
-              rel="nofollow sponsored"
-              class="product-btn">
-              ${autoLabel}
-            </a>
-
-            <details style="margin-top:8px;">
-              <summary style="
-                cursor:pointer;
-                color:#776a70;
-                font-size:13px;
-              ">Choose another currency</summary>
-
-              <div style="
-                display:flex;
-                flex-direction:column;
-                gap:8px;
-                margin-top:8px;
-              ">
-                <a
-                  href="${product.pkrLink || product.link}"
-                  target="_blank"
-                  rel="nofollow sponsored"
-                  class="product-btn">
-                  🇵🇰 Shop in PKR
-                </a>
-
-                <a
-                  href="${product.usdLink || product.link}"
-                  target="_blank"
-                  rel="nofollow sponsored"
-                  class="product-btn">
-                  🌎 Shop in USD
-                </a>
-              </div>
-            </details>
-
-          </div>
+          <a
+            href="${usdLink}"
+            target="_blank"
+            rel="nofollow sponsored"
+            class="product-btn">
+            🌎 Shop in USD
+          </a>
         </div>
       </article>
     `;
