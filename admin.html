@@ -73,6 +73,21 @@ textarea {
   resize: vertical;
 }
 
+input[type="file"] {
+  padding: 10px;
+  background: #fff8fa;
+}
+
+#imagePreview {
+  display: none;
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid #eedde3;
+}
+
 button {
   border: none;
   background: #c95f83;
@@ -110,6 +125,19 @@ button:hover {
 .product-info p {
   color: #776a70;
   font-size: 14px;
+}
+
+.product-thumbnail {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 15px;
+}
+
+.product-left {
+  display: flex;
+  align-items: center;
 }
 
 .delete {
@@ -162,8 +190,9 @@ button:hover {
     </div>
 
     <div class="form-group">
-      <label>Product Image URL</label>
-      <input type="text" id="image" placeholder="Paste product image URL">
+      <label>Product Image</label>
+      <input type="file" id="imageFile" accept="image/*" onchange="previewImage(event)">
+      <img id="imagePreview" alt="Image Preview">
     </div>
 
     <div class="form-group">
@@ -209,6 +238,8 @@ button:hover {
 
 <script>
 
+let selectedImage = "";
+
 function getProducts() {
   return JSON.parse(localStorage.getItem("glownestProducts")) || [];
 }
@@ -217,19 +248,41 @@ function saveProducts(products) {
   localStorage.setItem("glownestProducts", JSON.stringify(products));
 }
 
+function previewImage(event) {
+
+  const file = event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    selectedImage = e.target.result;
+
+    const preview = document.getElementById("imagePreview");
+
+    preview.src = selectedImage;
+    preview.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+}
+
 function addProduct() {
 
   const name = document.getElementById("name").value.trim();
   const category = document.getElementById("category").value;
-  const image = document.getElementById("image").value.trim();
   const price = document.getElementById("price").value.trim();
   const description = document.getElementById("description").value.trim();
   const link = document.getElementById("link").value.trim();
   const pkrLink = document.getElementById("pkrLink").value.trim();
   const usdLink = document.getElementById("usdLink").value.trim();
 
-  if (!name || !image || !description || !link) {
-    alert("Please fill in all required product details.");
+  if (!name || !selectedImage || !description || !link) {
+    alert("Please fill in all required product details and select an image.");
     return;
   }
 
@@ -239,7 +292,7 @@ function addProduct() {
     id: Date.now(),
     name,
     category,
-    image,
+    image: selectedImage,
     price,
     description,
     link,
@@ -250,12 +303,17 @@ function addProduct() {
   saveProducts(products);
 
   document.getElementById("name").value = "";
-  document.getElementById("image").value = "";
+  document.getElementById("imageFile").value = "";
   document.getElementById("price").value = "";
   document.getElementById("description").value = "";
   document.getElementById("link").value = "";
   document.getElementById("pkrLink").value = "";
   document.getElementById("usdLink").value = "";
+
+  selectedImage = "";
+
+  document.getElementById("imagePreview").src = "";
+  document.getElementById("imagePreview").style.display = "none";
 
   showProducts();
 
@@ -291,13 +349,23 @@ function showProducts() {
 
     <div class="product">
 
-      <div class="product-info">
+      <div class="product-left">
 
-        <h3>${product.name}</h3>
+        <img
+          src="${product.image}"
+          class="product-thumbnail"
+          alt="${product.name}"
+        >
 
-        <p>
-          ${product.category} · ${product.price || "Price not set"}
-        </p>
+        <div class="product-info">
+
+          <h3>${product.name}</h3>
+
+          <p>
+            ${product.category} · ${product.price || "Price not set"}
+          </p>
+
+        </div>
 
       </div>
 
