@@ -857,13 +857,23 @@ function loadGlowNestProducts() {
           font-size:18px;
         ">${product.price}</strong>
 
-        <a
-          href="${product.link}"
-          target="_blank"
-          rel="nofollow sponsored"
-          class="product-btn">
-          View This Find
-        </a>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a
+            href="${product.pkrLink || product.link}"
+            target="_blank"
+            rel="nofollow sponsored"
+            class="product-btn">
+            🇵🇰 Shop in PKR
+          </a>
+
+          <a
+            href="${product.usdLink || product.link}"
+            target="_blank"
+            rel="nofollow sponsored"
+            class="product-btn">
+            🌎 Shop in USD
+          </a>
+        </div>
       </div>
     </article>
   `).join("");
