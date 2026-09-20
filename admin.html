@@ -167,7 +167,7 @@ button:hover {
     </div>
 
     <div class="form-group">
-      <label>Price</label>
+      <label>Price (Optional)</label>
       <input type="text" id="price" placeholder="Example: $9.99">
     </div>
 
@@ -179,6 +179,16 @@ button:hover {
     <div class="form-group">
       <label>AliExpress Affiliate Link</label>
       <input type="text" id="link" placeholder="Paste your AliExpress affiliate link">
+    </div>
+
+    <div class="form-group">
+      <label>PKR Affiliate Link</label>
+      <input type="text" id="pkrLink" placeholder="Paste PKR affiliate link">
+    </div>
+
+    <div class="form-group">
+      <label>USD Affiliate Link</label>
+      <input type="text" id="usdLink" placeholder="Paste USD affiliate link">
     </div>
 
     <button onclick="addProduct()">Add Product</button>
@@ -215,9 +225,11 @@ function addProduct() {
   const price = document.getElementById("price").value.trim();
   const description = document.getElementById("description").value.trim();
   const link = document.getElementById("link").value.trim();
+  const pkrLink = document.getElementById("pkrLink").value.trim();
+  const usdLink = document.getElementById("usdLink").value.trim();
 
-  if (!name || !image || !price || !description || !link) {
-    alert("Please fill in all product details.");
+  if (!name || !image || !description || !link) {
+    alert("Please fill in all required product details.");
     return;
   }
 
@@ -230,7 +242,9 @@ function addProduct() {
     image,
     price,
     description,
-    link
+    link,
+    pkrLink,
+    usdLink
   });
 
   saveProducts(products);
@@ -240,6 +254,8 @@ function addProduct() {
   document.getElementById("price").value = "";
   document.getElementById("description").value = "";
   document.getElementById("link").value = "";
+  document.getElementById("pkrLink").value = "";
+  document.getElementById("usdLink").value = "";
 
   showProducts();
 
@@ -280,7 +296,7 @@ function showProducts() {
         <h3>${product.name}</h3>
 
         <p>
-          ${product.category} · ${product.price}
+          ${product.category} · ${product.price || "Price not set"}
         </p>
 
       </div>
