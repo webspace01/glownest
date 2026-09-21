@@ -850,65 +850,106 @@
   </div>
 
 </section>
-<script>
-function loadGlowNestProducts() {
-  const products =
-    JSON.parse(localStorage.getItem("glownestProducts")) || [];
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-  const list = document.getElementById("productList");
+  const firebaseConfig = {
+    apiKey: "AIzaSyDq6u16IpBAUSJwIJ6v8qs9V96S0qB8-20",
+    authDomain: "glownest-38e72.firebaseapp.com",
+    projectId: "glownest-38e72",
+    storageBucket: "glownest-38e72.firebasestorage.app",
+    messagingSenderId: "595848542095",
+    appId: "1:595848542095:web:65f4571cf96ecd3a787dfa",
+    measurementId: "G-W2RYNYT1KR"
+  };
 
-  if (!list) return;
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-  if (products.length === 0) {
-    list.innerHTML = `
-      <p style="grid-column:1/-1;text-align:center;color:#776a70;">
-        New finds are coming soon.
-      </p>
-    `;
-    return;
+  async function loadGlowNestProducts() {
+    const list = document.getElementById("productList");
+
+    if (!list) return;
+
+    try {
+      const snapshot = await getDocs(collection(db, "products"));
+
+      if (snapshot.empty) {
+        list.innerHTML = `
+          <p style="grid-column:1/-1;text-align:center;color:#776a70;">
+            New finds are coming soon.
+          </p>
+        `;
+        return;
+      }
+
+      list.innerHTML = "";
+
+      snapshot.forEach((doc) => {
+        const product = doc.data();
+
+        const card = `
+          <article class="product-card">
+
+            <div class="product-image"
+              style="
+                background-image:url('${product.image || ""}');
+                background-size:cover;
+                background-position:center;
+              ">
+            </div>
+
+            <div class="product-info">
+
+              <span class="product-label">
+                ${product.category || ""}
+              </span>
+
+              <h3>${product.name || "Product"}</h3>
+
+              <p>${product.description || ""}</p>
+
+              <strong style="
+                display:block;
+                margin-bottom:15px;
+                color:#c95f83;
+                font-size:18px;
+              ">
+                ${product.price || ""}
+              </strong>
+
+              <a
+                href="${product.usdLink || "#"}"
+                target="_blank"
+                rel="nofollow sponsored"
+                class="product-btn">
+                Shop Now
+              </a>
+
+            </div>
+          </article>
+        `;
+
+        list.innerHTML += card;
+      });
+
+    } catch (error) {
+      console.error("Firebase error:", error);
+
+      list.innerHTML = `
+        <p style="grid-column:1/-1;text-align:center;color:#c95f83;">
+          Products could not be loaded.
+        </p>
+      `;
+    }
   }
 
-  list.innerHTML = products.map(product => {
-    const usdLink = product.usdLink || product.link;
-
-    return `
-      <article class="product-card">
-        <div class="product-image"
-          style="
-            background-image:url('${product.image}');
-            background-size:cover;
-            background-position:center;
-          ">
-        </div>
-
-        <div class="product-info">
-          <span class="product-label">${product.category}</span>
-
-          <h3>${product.name}</h3>
-
-          <p>${product.description}</p>
-
-          <strong style="
-            display:block;
-            margin-bottom:15px;
-            color:#c95f83;
-            font-size:18px;
-          ">${product.price}</strong>
-
-          <a
-            href="${usdLink}"
-            target="_blank"
-            rel="nofollow sponsored"
-            class="product-btn">
-             Shop Now
-          </a>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-loadGlowNestProducts();
+  loadGlowNestProducts();
 </script>
 </body>
 </html>
